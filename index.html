@@ -97,7 +97,7 @@
 </div>
 
 <script>
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx4XgLYUkNW-PIu6qg4m5gQDg_N-FLxXOUyC09E70zdV90W8QFd8n9DU3i6QMt6wrEetw/exec";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxibFgMKks2kcJyeEMbahnXnXWc9pgIAebTkxULcSAGS70B9BlCN3mgGjW2epuo0xyskA/exec";
 
 let recognition = null;
 let isRecording = false;
@@ -189,17 +189,17 @@ async function saveNote() {
 
   const entry = { founder, company, meetingDate, note, time: new Date().toLocaleString("en-GB") };
 
-  if (APPS_SCRIPT_URL !== "YOUR_APPS_SCRIPT_URL") {
-    try {
-      await fetch(APPS_SCRIPT_URL, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(entry)
-      });
-    } catch (err) {
-      setStatus("Saved locally (sheet sync failed)", "error");
-    }
+  const params = new URLSearchParams({
+    founder: entry.founder,
+    company: entry.company,
+    meetingDate: entry.meetingDate,
+    note: entry.note
+  });
+
+  try {
+    await fetch(APPS_SCRIPT_URL + "?" + params.toString(), { method: "GET", mode: "no-cors" });
+  } catch (err) {
+    setStatus("Saved locally (sheet sync failed)", "error");
   }
 
   addNoteToUI(entry);
