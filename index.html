@@ -62,9 +62,14 @@
         <input type="text" id="founder" placeholder="e.g. Sarah Chen" />
       </div>
       <div style="flex:1">
-        <label>Company</label>
+        <label>Company name</label>
         <input type="text" id="company" placeholder="e.g. Acme AI" />
       </div>
+    </div>
+
+    <div style="margin-bottom:1rem;">
+      <label>Meeting date</label>
+      <input type="date" id="meetingDate" style="width:100%; border:1px solid #ddd; border-radius:8px; padding:10px 12px; font-size:15px; outline:none; background:#fafafa;" />
     </div>
 
     <label>Notes</label>
@@ -92,7 +97,7 @@
 </div>
 
 <script>
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby9s2MzC8xX51ofS5zYRDUu6sMg2LLNdH07ZA-pLtGCk15hxXdCruoNxnfQekNJGuGkSw/exec";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwRNvRV2mz098oyyfkJNVcltsr-PxFy-z1k6ZEJ0xOAMPfVe7e1QHpIDi2n95r8QBQe/exec";
 
 let recognition = null;
 let isRecording = false;
@@ -166,6 +171,7 @@ function clearNote() {
   box.classList.add("empty");
   document.getElementById("founder").value = "";
   document.getElementById("company").value = "";
+  document.getElementById("meetingDate").value = today();
   setStatus("");
 }
 
@@ -173,6 +179,7 @@ async function saveNote() {
   const note = document.getElementById("transcript").textContent;
   const founder = document.getElementById("founder").value.trim();
   const company = document.getElementById("company").value.trim();
+  const meetingDate = document.getElementById("meetingDate").value;
 
   if (!note || note === "Tap record and start speaking…") {
     setStatus("Nothing to save yet.", "error"); return;
@@ -180,7 +187,7 @@ async function saveNote() {
 
   setStatus("Saving…");
 
-  const entry = { founder, company, note, time: new Date().toLocaleString("en-GB") };
+  const entry = { founder, company, meetingDate, note, time: new Date().toLocaleString("en-GB") };
 
   if (APPS_SCRIPT_URL !== "YOUR_APPS_SCRIPT_URL") {
     try {
@@ -238,7 +245,9 @@ function setStatus(msg, type = "") {
   el.className = "status" + (type ? " " + type : "");
 }
 
+function today() { return new Date().toISOString().split('T')[0]; }
+document.getElementById('meetingDate').value = today();
 loadFromLocalStorage();
 </script>
 </body>
-</html>
+</html>S
